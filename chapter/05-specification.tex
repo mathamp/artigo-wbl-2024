@@ -1,0 +1,28 @@
+\section{Especificação no Maude} \label{sec:chap5}
+
+O ambiente é formado por variáveis de ambiente (temperatura, luminosidade, horário) e componentes (sensores, controladores e atuadores). Os componentes são conectados por canais e escutam por eventos, ações e comandos transmitidos por estes. Estes componentes foram modelados utilizando uma sintaxe definida no Maude. A comunicação entre componentes foram modeladas utilizando regras de reescrita.
+
+Devido a forma que o Maude faz as suas buscas (busca em largura), foi necessário realizar algumas alterações na nossa especificação. Se for permitido que diversas regras de reescrita ocorram \cdaniel{em diversos momentos}{a todo momento}, o grafo de busca irá crescer de forma exponencial.
+\cdaniel{No modelo original, não haviam restrições na aplicação das regras de reescrita, o que frequentemente faria o Maude explorar cenários indesejadas de evolução da rede. Por exemplo, um dispositivo poderia ficar reemitindo a mesma ação diversas vezes, embora isto possa ser um cenário real, isto prejudica a busca do Maude, aumentando consideravelmente o grafo de estados.}{Não haviam restrições na aplicação das regras de reescrita no modelo original, frequentemente gerando cenários irrelevantes para a evolução da rede. Por exemplo, a reemisão da mesma ação por dispositivos, mesmo que representando um comportamento real do sistema, induz a uma explosão no espaço de busca e que não permite a análise dos estados relevantes para a detecção de conflitos.} \matheus{Quando houvesse 2 ou mais eventos definidos para um mesmo valor de um parâmetro, o Maude exploraria cenários como dispositivos ficarem se sobreescrevendo, e não avançar a comunicação deste estado, fazendo a árvore ter um crescimento exponencial. \daniel{(essa frase ainda está difícil de entender)}}
+
+Para limitar a busca e fazer o Maude explorar cenários \cdaniel{mais interessantes}{relevantes}, foram feitas as seguintes modificações \odaniel{para cortar os cenários indesejados}:
+
+\begin{itemize}
+  \item A comunicação entre componentes foi simplificada. Ao invés de modelar a comunicação entre cada componente como uma regra de reescrita, a cadeia de comunicação inteira foi modelada como uma única regra.
+  \item O tempo de simulação da rede foi limitado a 5 dias. Sem esta restrição, se houver conflitos na configuração da rede, o Maude eventualmente irá encontrá-lo, mas se não houver conflitos, o Maude iria continuar a sua busca indefinidamente.
+  \item Adição de logs para evitar que uma mesma comunicação ocorra repetidamente.
+\end{itemize}
+
+Uma regra de reescrita condicional no Maude pode ser especificada utilizando a sintaxe: \\
+\texttt{crl [\textbf{nome-regra}] : \textbf{t1} => \textbf{t2} if \textbf{condição} . } \\
+Se a nossa rede em algum momento atingir o formato \textbf{t\textsubscript{1}} e a \textbf{condição} for verdadeira, a rede inteira será substituída para ter o formato  \textbf{t\textsubscript{2}}.
+
+Veja um exemplo simplificado de uma regra de reescrita utilizado no nosso trabalho: \\
+\texttt{crl [evento-temperatura-quente]} \\
+\texttt{<TIMESTAMP = X>} \\
+\texttt{<TEMPERATURA = Y>} \\
+\texttt{=>} \\
+\texttt{<EMITIR EVENTO> <EMITIR AÇÃO> <LIGAR AR CONDICIONADO> <REGISTRAR LOG>} \\
+\texttt{if Y == 25 and <EVENTO "Temperatura quente"\ AT X> not in <LOGS> .}
+
+Devido ao tamanho e complexidade das nossas regras de reescrita (cada regra de reescrita tem cerca de 20 linhas), o exemplo acima foi simplificado para conter apenas as informações necessárias. Para ver a regra completa, veja o apêndice \ref{apx:apx2}. Quando a temperatura do quarto atinge 25ºC e o evento ``\textbf{Temperatura Quente}'' ainda não ocorreu, então o sensor de temperatura emite um evento que faz com que o controlador de temperatura emita uma ação que faz com que o atuador do ar condicionado emita um comando que liga o ar condicionado, e um log desde evento é registrado com um \textit{timestamp}.

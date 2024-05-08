@@ -1,0 +1,67 @@
+\section{Apêndice -- Especificação completa da rede} \label{apx:apx1}
+
+\noindent
+Objetivos da rede:
+\begin{itemize}
+  \item A temperatura do quarto deve estar entre 12ºC e 28ºC
+  \item A luminosidade do quarto não deve estar abaixo de 500 lux
+  \item Durante a madrugada, as luzes do quarto devem estar apagadas
+\end{itemize}
+
+\noindent
+3 sensores:
+\begin{itemize}
+  \item Sensor de temperatura
+  \item Sensor de luminosidade
+  \item Relógio
+\end{itemize}
+
+\noindent
+2 controladores:
+\begin{itemize}
+  \item Controlador para temperatura
+  \item Controlador para lâmpadas
+\end{itemize}
+
+\noindent
+3 atuadores:
+\begin{itemize}
+  \item Atuador para o ar condicionado
+  \item Atuador para o aquecedor
+  \item Atuador para lâmpadas
+\end{itemize}
+
+\noindent
+As variáveis de ambiente mudam conforme as seguintes regras:
+\begin{itemize}
+  \item Temperatura (T):
+  \begin{itemize}
+    \item A temperatura fora do quarto é dada por $T(h) = 10 \sin(\frac{h - 6}{12} \pi) + 20$
+    \item Se o ar condicionado está ligado, a temperatura do quarto cai 1ºC por hora
+    \item Se o aquecedor está ligado, a temperatura do quarto aumenta 1ºC por hora
+    \item Se nenhum dos dois está ligado, a temperatura do quarto se aproxima da temperatura de fora, 1ºC por hora
+  \end{itemize}
+  \item Luminosidade (L):
+  \begin{itemize}
+    \item A luminosidade do quarto é dada por $L(h) = 750 \sin(\frac{h - 6}{12} \pi) + 750$
+    \item Se as luzes do quarto estão ligadas, então a luminosidade do quarto é 1200 lux
+  \end{itemize}
+\end{itemize}
+
+\noindent
+Os dispositivos foram configurados em conjunto com as seguintes regras em mente:
+\begin{itemize}
+  \item Se a temperatura do quarto atingir 25ºC, ligar o ar condicionado
+  \item Se a temperatura do quarto atingir 20ºC, desligar o ar condicionado e o aquecedor
+  \item Se a temperatura do quarto atingir 15ºC, ligar o aquecedor
+\end{itemize}
+
+\begin{itemize}
+  \item Se a luminosidade do quarto atingir 700 lux, ligar as luzes
+  \item Se a luminosidade do quarto atingir 900 lux, desligar as luzes
+\end{itemize}
+
+\begin{itemize}
+  \item Quando o relógio atingir 23:00, forçar as luzes a ficarem desligadas
+  \item Quando o relógio atingir 07:00, permitir que as luzes possam ser ligadas
+\end{itemize}

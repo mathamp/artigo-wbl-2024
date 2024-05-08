@@ -1,0 +1,15 @@
+\section{Modelo para redes IoT} \label{sec:chap3}
+
+O modelo é baseado na abordagem proposta por %\matheus{(repetição da palavra 'modelo', eu não sei uma maneira melhor de melhorar esta frase)} 
+\cite{IoTC2}. A rede IoT consiste de diversos componentes conectados, que comunicam entre si transmitindo eventos, ações e comandos. Entre esses componentes estão: sensores, controladores, atuadores e os dispositivos IoT.
+
+A forma de comunicação entre esses componentes funciona num modelo ``gatilho e ação'': cada dispositivo tem um conjunto de gatilhos, quando um gatilho ocorre, este realizará alguma ação. Sensores medem algum parâmetro do ambiente, e quando este atinge algum limiar, o sensor dispara eventos. Controladores escutam por eventos, e podem disparar ações em resposta. Atuadores escutam por ações, e podem disparar comandos em resposta. É importante ressaltar que um sensor pode emitir eventos para vários controladores, controladores podem receber eventos de vários sensores e emitir ações para vários atuadores, e atuadores podem receber ações de vários controladores. Conforme a quantidade de componentes na rede cresce, é possível que haja sobreposições na comunicação entre os componentes, e isto aumenta as chances de ocorrer conflitos.
+
+\subsection{Configurações e regras} \label{sec:chap3sub1}
+
+Uma rede IoT é montada com a finalidade de atender algum objetivo, por exemplo, ``Manter a temperatura do quarto agradável'', estas são chamadas \textit{regras de ambiente} e devem ser mantidas a todo momento. Se a rede permitir que essas regras sejam quebradas, temos um \textit{conflito de regra de ambiente}.
+
+Os dispositivos da rede podem ser configurados por regras operacionais que ditam o seu comportamento. Um sensor pode ser configurado para observar algum parâmetro da rede e emitir eventos caso o parâmetro observado atinja algum limiar desejado, como por exemplo, ``Se a temperatura chegar em 30ºC, emitir o evento \textbf{Temperatura Quente}''. Um controlador pode ser configurado para escutar por eventos e emitir ações, como por exemplo, ``Ao receber o evento \textbf{Temperatura Quente}, emitir a ação \textbf{Ligar o ar condicionado}''. Um atuador pode ser configurado para escutar por ações e emitir comandos, como por exemplo, ``Ao receber a ação \textbf{Ligar o ar condicionado}, emitir o comando \textbf{Ligar} para o ar condicionado''.
+
+Dependendo de como a rede for configurada, é possível que um atuador receba 2 ações contraditórias ao mesmo tempo, devido a componentes diferentes que estão configurados para atender objetivos diferentes. Por exemplo, um grupo de componentes está configurados para ligar as luzes do quarto enquanto houver pessoas no quarto, enquanto outro grupo de componentes está configurados para desligar as luzes caso esteja de madrugada. Quando houver pessoas na sala de madrugada, as ações \textbf{Ligar luzes} e \textbf{Desligar luzes} serão emitidas, que contradizem entre si. Este tipo de conflito foi identificado como \textit{conflito direto} \cite{ConflictDetectionORAN}.
+Conflitos de regra de ambiente também são conflitos diretos.

@@ -1,0 +1,8 @@
+\section{Resultados} \label{sec:chap6}
+
+Para validarmos o nosso modelo, foram instanciadas diversas configurações de componentes na rede, que foram simuladas no Maude a procura de conflitos. 
+
+A primeira configuração é a configuração completa especificada no capítulo \ref{sec:chap4}, o Maude reporta corretamente que não existem conflitos nesta configuração. Esta configuração originalmente continha um conflito não percebido de antemão: originalmente as luzes foram configuradas para serem desligadas exatamente à meia noite, mas também há a regra de ambiente que diz que as luzes devem estar desligadas durante a madrugada. Quando o horário chegava à meia noite com as luzes ligadas, o Maude detectava 2 possíveis cenários para esta situação: ``As luzes estão ligadas de madrugada, portanto temos um conflito direto'' e ``Desligar as luzes e prosseguir com a busca''. A configuração foi ajustada para que as luzes desliguem um pouco antes da meia noite, e o conflito foi resolvido.
+
+Além da configuração principal, outras configurações foram testadas para validar o modelo em situações onde conflitos são esperados.
+Para mais detalhes, algumas das configurações notáveis podem ser encontradas no endereço: \texttt{https://github.com/mathamp/conflict-detection-maude}.

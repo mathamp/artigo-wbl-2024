@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+
+\usepackage{sbc-template}
+\usepackage{graphicx,url}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+% \usepackage[latin1]{inputenc}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+
+\input{extra/macros}
+
+     
+\sloppy
+
+\title{Detecção de conflitos diretos em redes IoT utilizando o Maude}
+
+\author{Matheus de A. M. Pereira\inst{1}, Daniel Ventura\inst{1}}
+
+\address{Instituto de Informática\\
+  Universidade Federal de Goiás (UFG) -- Goiânia, GO -- Brazil
+  \email{matheus.marpereira@gmail.com, ventura@ufg.br}
+}
+
+\begin{document} 
+
+\maketitle
+
+\begin{abstract}
+  In this work we explore the conflict detection in distributed networks problem. We propose a logical concurrency model for the network and specify it in the Maude system, which will be able to simulate the network and detect possible conflicts.
+\end{abstract}
+     
+\begin{resumo} 
+  Neste trabalho exploramos o problema de detecção de conflitos em redes distribuídas utilizando lógica de reescrita. Propomos um modelo lógico e concorrente para a rede e realizamos a sua especificação no software Maude, que será utilizado para simular a rede e detectar possíveis problemas.
+\end{resumo}
+
+\input{chapter/01-intro}
+\input{chapter/02-rlogic}
+\input{chapter/03-iotmodel}
+\input{chapter/04-case}
+\input{chapter/05-specification}
+\input{chapter/06-results}
+\input{chapter/07-conclusion}
+
+\bibliographystyle{sbc}
+\bibliography{main-wbl}
+
+\pagebreak
+\appendix
+
+\input{extra/answers}
+
+\input{appendix/01}
+\input{appendix/02}
+
+\end{document}

@@ -1,0 +1,41 @@
+\section{Apêndice -- Regra de reescrita completa para o evento de temperatura quente} \label{apx:apx2}
+\begin{verbatim}
+crl [temp-hot-event] :
+  Vars {
+    AV "Time" is N1,
+    AV "Temperature" is I1,
+    CV "Air Conditioning" is St1,
+    VarSet
+  }
+  Devs {
+    Sensor "Temp" | event: E1, 
+      channels: (Ch1, ChSet1),
+    Controller "Temp" | action: A1, 
+      channels: (Ch1, ChSet1),
+    DevSet
+  }
+  Logs {
+    LogSet
+  }
+  =>
+  Vars {
+    AV "Time" is N1,
+    AV "Temperature" is I1,
+    CV "Air Conditioning" is on,
+    VarSet
+  }
+  Devs {
+    Sensor "Temp" | event: "TempHot", 
+      channels: (Ch1, ChSet1),
+    Controller "Temp" | action: "Air Conditioning" On,
+      channels: (Ch1, ChSet1),
+    DevSet
+  }
+  Logs {
+    Event "TempHot" at N1,
+    Action "Air Conditioning" On at N1,
+    LogSet
+  }
+  if (25 == I1) and 
+    not ((Event "TempHot" at N1) in LogSet) .
+\end{verbatim}

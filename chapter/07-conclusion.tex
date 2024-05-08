@@ -1,0 +1,16 @@
+\section{Conclusões} \label{sec:chap7}
+Apresentamos um modelo para detecção de conflitos e realizamos a sua especificação no Maude, que reportou corretamente os conflitos nos casos esperados e até mesmo em casos inesperados.
+
+A especificação da concorrência deste sistema com regras de reescrita foi bastante natural, sendo considerado um aspecto positivo. Entretanto, como a configuração de cada componente é modelada como uma regra de reescrita, para testar novas configurações, é necessário escrever novas regras, que devido ao seu tamanho e complexidade, compromete a escalabilidade da abordagem e acaba dificultando o processo iterativo de novas configurações.
+
+Certos aspectos da especificação do modelo tiveram que ser alterados para que o Maude possa fazer buscas em um tempo razoável. Essas alterações tem como principal objetivo reduzir o tamanho do espaço de busca.
+
+Como sugestões de trabalhos futuros, os seguintes aspectos desse trabalho podem ser explorados:
+\begin{itemize}
+  \item Expandir o domínio de estados dos objetos IoT de valores binários para valores discretos. Isto permitiria um controle mais refinado dos objetos, como controlar a temperatura do ar condicionado, ou a luminosidade das lâmpadas.
+  \item Explorar a possibilidade de utilizar mais condições relacionais. Atualmente os eventos são disparados apenas se uma variável de ambiente atinge um valor exato.
+  \item Este trabalho detecta somente conflitos diretos. Na literatura existem outros tipos de conflitos: indiretos e implícitos. Conflitos indiretos são possíveis de serem detectados formalmente, mas estes devem ser identificados de antemão, utilizando ferramentas de análise estatísticas. Por exemplo, ligar o ar condicionado e abrir a janela não são ações contraditórias, mas podem ser detrimentais para o ambiente. Para mais informações, veja \cite{ConflictDetectionORAN}.
+  \item Este trabalho aborda somente a detecção de conflitos. Mitigação automática de conflitos é uma possível extensão do trabalho que pode ser explorada.
+  \item Identificar se existem regras de reescrita que podem ser trocadas por equações. Isto reduziria o crescimento do grafo de busca e permitiria buscas em configurações mais complexas.
+  \item No Maude, é possível definir estratégias para aplicação de regras, que impediria a exploração de estados indesejáveis. O uso de estratégias pode ser usado para minimizar o crescimento da árvore de busca. \cite{MaudeExplanation}
+\end{itemize}
