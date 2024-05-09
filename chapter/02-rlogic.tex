@@ -2,12 +2,8 @@
 
 Lógica de reescrita é definida como uma \textit{teoria de reescrita sortida} $\mathcal{R} = (\Sigma, E \cup B, R)$, onde $\Sigma$ é a sintaxe com \emph{sorts} da nossa teoria, $E$ é um conjunto de equações terminante e confluente, $B$ um conjunto de axiomas (e.g. associatividade, comutatividade e identidade) e $R$ é um conjunto de regras de reescrita no formato $t \rightarrow t'$ ou no formato condicional: $t \rightarrow t' \texttt{ se } \textbf{condição}$ \cite{RewritingLogicTwentyYears}. Assim, na representação de um sistema computacional utilizando a lógica de reescrita $\mathcal{R}$, a teoria equacional $(\Sigma, E \cup B)$ representa os estados do sistema como tipos de dados algébricos enquanto o conjunto de regras de reescrita $R$ (possivelmente não-confluente) especifica a dinâmica do sistema.
 
-% \daniel{(talvez inserir algum exemplo de definição no Maude mais a frente. Se não for para já introduzir o que foi feito na sua especificação usar uma definição para conjunto de números naturais, por exemplo, para ilustrar os conceitos da teoria equacional.)}
-
 Devido a natureza não-determinística das regras de reescrita, onde qualquer regra de reescrita compatível com um determinado estado do sistema pode ser aplicada, sistemas concorrentes podem ser naturalmente modelados, devido a incerteza sobre a ordem de execução e comunicação entre os dispositivos. 
 Por exemplo, considere um quarto com dispositivos inteligentes configurados para ligar o aquecedor quando a temperatura do quarto atingir 10ºC e ligar as luzes quando o horário for 18:30, e que, exatamente às 18:30 a temperatura chegou a 10ºC. Devido a natureza concorrente dos dispositivos, não é possível determinar qual ação ocorrerá primeiro: ligar as luzes ou ligar o aquecedor, mas é possível deduzir os cenários que podem ocorrer como um diagrama de transições:
-
-% \matheus{(Talvez arrumar um exemplo mais abstrato? Isso ficaria mais fácil/simples pro pessoal que é da lógica?)}\daniel{(não vi nenhuma reclamação sobre o exemplo)}
 
 \begin{figure}[h]
   \centering
@@ -21,50 +17,46 @@ Este é um exemplo de situação confluente, onde todas as possibilidades de tra
 \subsection{Maude} \label{sec:chap2sub1}
 
 O software utilizado para a especificação do nosso modelo será o Maude, um framework em Lógica de Reescrita de alta performance.
-\matheus{No Maude, a sintaxe $\Sigma$ para construir sorts e operadores é definida utilizando o comando \texttt{op}, as equações $E$ utilizando o comando \texttt{eq}, e os axiomas $B$ são definidos como parâmetros no momento da declaração dos construtores utilizando o comando \texttt{op}.}
-% No Maude, é possível definir a sintaxe $\Sigma$ \cdaniel{dos nossos}{com} \textit{sorts} utilizando o comando \texttt{op}.
-%\cmatheus{(Eu não sei como chamar instâncias de um sort. Na literatura eu lembro de ver termos como: objetos, objetos tipados, sorted objects, sorted terms, sorts)}{}
-% \cdaniel{Podemos definir as nossas}{Definimos as} equações $E$ \odaniel{e seus axiomas $B$} utilizando o comando \texttt{eq}\cdaniel{.}{, enquanto os axiomas em $B$ são definidos como parâmetros no momento da declaração dos construtores utilizando o comando \texttt{op}.}
-%\cmatheus{(Talvez desenvolver mais o conceito de equações. Ele não foi muito bem explicado anteriormente também...)}{}
-%\cdaniel{(continuação do exemplo)}{}
-O par $(\Sigma, E \cup B)$ no Maude \cdaniel{pode ser visto como um programa funcional}{deve definir funções totais, podendo serem vistas como programas funcionais}.
-\cdaniel{(ajustar essa observação de acordo ao exemplo inserido)}{}
+No Maude, a sintaxe $\Sigma$ para construir sorts e operadores é definida utilizando o comando \texttt{op}, as equações $E$ utilizando o comando \texttt{eq}, e os axiomas $B$ são definidos como parâmetros no momento da declaração dos construtores utilizando o comando \texttt{op}.
+O par $(\Sigma, E \cup B)$ no Maude deve definir funções totais, podendo serem vistas como programas funcionais.
 
-\matheus{Abaixo contém uma definição dos números naturais utilizando os axiomas de Peano, e uma definição da operação de adição utilizando equações:}
+Abaixo apresentamos uma definição de conjuntos de naturais no Maude para introduzir a sua sintaxe:
 
-{
-\color{Red}
 \begin{verbatim}
-sort Nat .
-op 0 : -> Nat [ctor] .
-op s : Nat -> Nat [ctor] .
-
-vars N N': Nat .
-
-op add : Nat Nat -> Nat [assoc comm] .
-eq add(s(N'), N) = add(N', s(N)) .
-eq add(0, N) = N .
-\end{verbatim}
-}
-
-\matheus{E uma definição para conjuntos de naturais, com uma operação \texttt{in} para verificar se um elemento pertence a um conjunto:}
-
-{
-\color{Red}
-\begin{verbatim}
+protecting NAT .
 sort NatSet .
 subsort Nat < NatSet .
+\end{verbatim}
 
-op empty : -> NatSet .
-op __ : Nat NatSet -> NatSet [assoc comm id: empty]
+\noindent
+Primeiro importamos um módulo do prelúdio, chamado \texttt{NAT}. \\
+Definimos um sort chamado \texttt{NatSet} e especificamos que todo \texttt{N} também é um \texttt{NatSet}.
 
+\begin{verbatim}
+op empty : -> NatSet [ctor].
+op _,_ : NatSet NatSet -> NatSet 
+            [ctor assoc comm id: empty] .
+\end{verbatim}
+
+\noindent
+Definimos um construtor de um \texttt{NatSet}, através de uma constante chamada \texttt{empty}. \\
+Um construtor infixo posicional também é definido, que precisa de dois sorts \texttt{NatSet} para ser construído, onde \texttt{\_} indica as posições desses sorts no construtor. Este construtor também é definido como associativo, comutativo, e seu elemento identidade é \texttt{empty}.
+
+\begin{verbatim}
+var N : Nat .
 var S : NatSet .
 
+eq N,N = N .
+
 op _in_ : Nat NatSet -> Bool .
-eq N in (N S) = true .
+eq N in (N,S) = true .
 eq N in S = false [owise] .
 \end{verbatim}
-}
+
+\noindent
+Aqui definimos variáveis para utilizarmos nas nossas equações e operações. \\
+A primeira equação faz com que nosso construtor de conjuntos seja idempotente. \\
+Definimos uma operação para verificar se um elemento está num conjunto através de 2 equações parciais. A primeira equação utiliza \textit{pattern matching} para verificar se o elemento desejado está no conjunto, caso contrário, a segunda equação é aplicada.
 
 Uma especificação no Maude pode ser dividida em módulos, estamos interessados em 2 tipos de módulos específicos:
 \begin{itemize}
@@ -76,5 +68,5 @@ Uma especificação no Maude pode ser dividida em módulos, estamos interessados
 Após especificado o formato da rede e a comunicação entre os dispositivos, uma rede pode ser instanciada e o Maude pode iniciar a busca por estados que representam o acontecimento de conflitos utilizando as regras de reescrita. No Maude, estamos interessados no uso de 2 comandos para a execução das regras de reescrita:
 \begin{itemize}
   \item \texttt{rewrite <REDE> .}: Irá aplicar as regras de reescrita de forma determinística. Usado inicialmente para analisar como o Maude está realizando as regras de reescrita e se existem problemas na nossa especificação.
-  \item \texttt{search <REDE> =>* <CONFLITO> .}: Verificar se existe alguma ordem de aplicação de regras de reescrita que chega num conflito. Irá explorar todas as possibilidades para aplicação de regras de reescrita, gerando um grafo de busca de estados, que será explorado utilizando uma estratégia de busca em largura. Um detalhe importante \cdaniel{na}{no} qual deve-se tomar cuidado é não deixar o número de estados crescer subitamente, pois isso impedirá \odaniel{o Maude de} fazer buscas mais profundas em um tempo razoável \daniel{utilizando o Maude}. Note que o crescimento da árvore de busca \odaniel{do Maude} será determinado \cdaniel{pelas regras de reescrita e suas restrições.}{pelo número de regras de reescrita aplicáveis em cada estado.}
+  \item \texttt{search <REDE> =>* <CONFLITO> .}: Verificar se existe alguma ordem de aplicação de regras de reescrita que chega num conflito. Irá explorar todas as possibilidades para aplicação de regras de reescrita, gerando um grafo de busca de estados, que será explorado utilizando uma estratégia de busca em largura. Um detalhe importante no qual deve-se tomar cuidado é não deixar o número de estados crescer subitamente, pois isso impedirá fazer buscas mais profundas em um tempo razoável utilizando o Maude. Note que o crescimento da árvore de busca será determinado pelo número de regras de reescrita aplicáveis em cada estado.
 \end{itemize}
