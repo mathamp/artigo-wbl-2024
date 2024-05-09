@@ -17,7 +17,7 @@ Este é um exemplo de situação confluente, onde todas as possibilidades de tra
 \subsection{Maude} \label{sec:chap2sub1}
 
 O software utilizado para a especificação do nosso modelo será o Maude, um framework em Lógica de Reescrita de alta performance.
-No Maude, a sintaxe $\Sigma$ para construir sorts e operadores é definida utilizando o comando \texttt{op}, as equações $E$ utilizando o comando \texttt{eq}, e os axiomas $B$ são definidos como parâmetros no momento da declaração dos construtores utilizando o comando \texttt{op}.
+No Maude, a sintaxe $\Sigma$ para construir sorts e operadores é definida utilizando o comando \texttt{op}, as equações $E$ utilizando o comando \texttt{eq}, e os axiomas $B$ são definidos entre colchetes como parâmetros no momento da declaração de um construtor.
 O par $(\Sigma, E \cup B)$ no Maude deve definir funções totais, podendo serem vistas como programas funcionais.
 
 Abaixo apresentamos uma definição de conjuntos de naturais no Maude para introduzir a sua sintaxe:
@@ -29,8 +29,8 @@ subsort Nat < NatSet .
 \end{verbatim}
 
 \noindent
-Primeiro importamos um módulo do prelúdio, chamado \texttt{NAT}. \\
-Definimos um sort chamado \texttt{NatSet} e especificamos que todo \texttt{N} também é um \texttt{NatSet}.
+Primeiro importamos um módulo do prelúdio, chamado \texttt{NAT}, que contém a definição dos números naturais. \\
+Definimos um sort chamado \texttt{NatSet} e especificamos que todo \texttt{Nat} também é um \texttt{NatSet}.
 
 \begin{verbatim}
 op empty : -> NatSet [ctor].
@@ -40,7 +40,7 @@ op _,_ : NatSet NatSet -> NatSet
 
 \noindent
 Definimos um construtor de um \texttt{NatSet}, através de uma constante chamada \texttt{empty}. \\
-Um construtor infixo posicional também é definido, que precisa de dois sorts \texttt{NatSet} para ser construído, onde \texttt{\_} indica as posições desses sorts no construtor. Este construtor também é definido como associativo, comutativo, e seu elemento identidade é \texttt{empty}.
+Um construtor infixo posicional também é definido, que precisa de dois sorts \texttt{NatSet} para ser construído, onde \texttt{\_} indica as posições desses sorts no construtor. Também é definido os axiomas de associatividade, comutatividade e \texttt{empty} como identidade para este construtor.
 
 \begin{verbatim}
 var N : Nat .
@@ -55,8 +55,8 @@ eq N in S = false [owise] .
 
 \noindent
 Aqui definimos variáveis para utilizarmos nas nossas equações e operações. \\
-A primeira equação faz com que nosso construtor de conjuntos seja idempotente. \\
-Definimos uma operação para verificar se um elemento está num conjunto através de 2 equações parciais. A primeira equação utiliza \textit{pattern matching} para verificar se o elemento desejado está no conjunto, caso contrário, a segunda equação é aplicada.
+A primeira equação traz a propriedade de idempotência para o segundo construtor (Por limitações técnicas, o Maude não consegue lidar com os axiomas \texttt{assoc} e \texttt{idem} juntos). \\
+Definimos uma operação para verificar se um elemento está num conjunto através de 2 equações parciais. A primeira equação utiliza \textit{pattern matching} para verificar se o elemento desejado está no conjunto, caso contrário, a segunda equação é utilizada.
 
 Uma especificação no Maude pode ser dividida em módulos, estamos interessados em 2 tipos de módulos específicos:
 \begin{itemize}

@@ -4,16 +4,17 @@ O ambiente é formado por variáveis de ambiente (temperatura, luminosidade, hor
 
 Devido a forma que o Maude faz as suas buscas (busca em largura), foi necessário realizar algumas alterações na nossa especificação. Se for permitido que diversas regras de reescrita ocorram a todo momento, o grafo de busca irá crescer de forma exponencial.
 Não haviam restrições na aplicação das regras de reescrita no modelo original, frequentemente gerando cenários irrelevantes para a evolução da rede. Por exemplo, a reemissão da mesma ação por dispositivos, mesmo que representando um comportamento real do sistema, induz a uma explosão no espaço de busca e que não permite a análise dos estados relevantes para a detecção de conflitos.
-Outro exemplo, quando a configuração permitia que um dispositivo emitisse 2 \matheus{mensagens (eventos/comandos/ações)} num mesmo instante para outro dispositivo, um cenário irrelevante que o Maude exploraria seria a reemissão alternada destes eventos, que causaria um crescimento exponencial do espaço de busca.
+Outro exemplo, quando a configuração permitia que um dispositivo emitisse 2 mensagens (eventos/ações/comandos) num mesmo instante para outro dispositivo, o Maude exploraria o cenário de reemissão alternada destes eventos, que causaria um crescimento exponencial do espaço de busca.
 
-Para limitar a busca e fazer o Maude explorar cenários relevantes, foram feitas as seguintes modificações:
+Para eliminar estes cenários e diminuir o tamanho da árvore de busca, foram feitas as seguintes modificações:
 
 \begin{itemize}
   \item A comunicação entre componentes foi simplificada. Ao invés de modelar a comunicação entre cada componente como uma regra de reescrita, a cadeia de comunicação inteira foi modelada como uma única regra.
-  \item O tempo de simulação da rede foi limitado a 5 dias. Sem esta restrição, se houver conflitos na configuração da rede, o Maude eventualmente irá encontrá-lo, mas se não houver conflitos, o Maude iria continuar a sua busca indefinidamente.
   \item Adição de logs para evitar que uma mesma comunicação ocorra repetidamente.
+  \item O tempo de simulação da rede foi limitado a 5 dias. Sem esta restrição, se houver conflitos na configuração da rede, o Maude eventualmente irá encontrá-lo, mas se não houver conflitos, o Maude iria continuar a sua busca indefinidamente.
 \end{itemize}
 
+\noindent
 Uma regra de reescrita condicional no Maude pode ser especificada utilizando a sintaxe: \\
 \texttt{crl [\textbf{nome-regra}] : \textbf{t1} => \textbf{t2} if \textbf{condição} . } \\
 \cmatheus{Se a nossa rede em algum momento atingir o formato \textbf{t\textsubscript{1}} e a \textbf{condição} for verdadeira, a rede inteira será substituída para ter o formato  \textbf{t\textsubscript{2}}.}{Se a rede em algum momento atingir o estado \textbf{t\textsubscript{1}} e a \textbf{condição} for verdadeira, a rede inteira será subtituida pelo estado \textbf{t\textsubscript{2}}}.

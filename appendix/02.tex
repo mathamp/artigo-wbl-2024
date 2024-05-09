@@ -11,7 +11,9 @@ crl [temp-hot-event] :
     Sensor "Temp" | event: E1, 
       channels: (Ch1, ChSet1),
     Controller "Temp" | action: A1, 
-      channels: (Ch1, ChSet1),
+      channels: (Ch1, Ch2, ChSet2),
+    Actuator "Air Conditioning" | command: C1,
+      channels: (Ch2, ChSet3)
     DevSet
   }
   Logs {
@@ -28,12 +30,15 @@ crl [temp-hot-event] :
     Sensor "Temp" | event: "TempHot", 
       channels: (Ch1, ChSet1),
     Controller "Temp" | action: "Air Conditioning" On,
-      channels: (Ch1, ChSet1),
+      channels: (Ch1, Ch2, ChSet2),
+    Actuator "Air Conditioning" | command: on,
+      channels: (Ch2, ChSet3)
     DevSet
   }
   Logs {
     Event "TempHot" at N1,
     Action "Air Conditioning" On at N1,
+    Command "Air Conditioning" on at N1,
     LogSet
   }
   if (25 == I1) and 
